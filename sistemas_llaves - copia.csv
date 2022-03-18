@@ -1,0 +1,1 @@
+Alg./Atrib.,Seguridad,Tiempo de cifrado (s/mb),Tiempo de descifrado (s/mb),Consumo de recursos (Ghz),Aumento de peso proporcional del cifrado (kb/mb)RSA 512,7,0.83,8.67,2.66,212RSA 1024,8,0.81,17.2,2.66,212RSA 2048,9,1.1,44.54,2.66,212AES 128,3,6.654,7.2965,2.66,256AES 256,4,3.347,3.62,2.64,128ECC Secp256k1,7,0.012,0.0429,1.48,0
