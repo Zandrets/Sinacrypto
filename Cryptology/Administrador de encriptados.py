@@ -25,19 +25,21 @@ def AES(msg, method, msg_type, mode):
         if msg_type == "file":
             name=os.path.basename(msg)
             path=os.path.dirname(msg)
+            extension=configs['ENCRYPT']['FILE_TYPE']
             content=open(msg, 'rb').read()          #Open and read the file in binary mode
         elif msg_type == "text":
             name=MD5_sample.encrypt(rng(32))
             path=os.getcwd()+'/tmp'
+            extension=configs['ENCRYPT']['MES_TYPE']
             content=bytes(msg, 'utf-8')             #Change the message to binary
         else :  return 2                            #Fail reason, invalid message type or none one
 
         #Encrypt section
         print("encrypting...")
-        encrypt=AES256.encrypt(key,content)                                                          #Keep the encrypted data
-        open(path+'/'+MD5_sample.encrypt(bytes(log, 'utf-8')), '+wb').write(name)                   #Overwrite the file with the encrypted data
-        open(path+'/'+MD5_sample.encrypt(bytes(log, 'utf-8')), 'ab').write(tag)
-        open(path+'/'+MD5_sample.encrypt(bytes(log, 'utf-8')), 'ab').write(encrypt)
+        encrypt=AES256.encrypt(key,content)                                                         #Keep the encrypted data
+        open(path+'/'+MD5_sample.encrypt(bytes(log, 'utf-8'))+extension, '+wb').write(name)                   #Overwrite the file with the encrypted data
+        open(path+'/'+MD5_sample.encrypt(bytes(log, 'utf-8'))+extension, 'ab').write(tag)
+        open(path+'/'+MD5_sample.encrypt(bytes(log, 'utf-8'))+extension, 'ab').write(encrypt)
 
         #Export section
         log_end_time=ctime(time())
