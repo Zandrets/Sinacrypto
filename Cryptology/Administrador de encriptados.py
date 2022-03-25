@@ -1,5 +1,7 @@
 #import Functions as tools
+from distutils.command.config import config
 import os
+import re
 from time import time, ctime, sleep
 from random import randbytes as rng
 import configparser
@@ -12,11 +14,11 @@ def AES(msg, method, msg_type, mode):
         #Log section
         log_start_time=ctime(time())
         log="\n starting AES %d encrypt at %s" % (mode, log_start_time)
-        open(os.getcwd()+'//'+'encrypt_system.log', 'at').write(log)
+        open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'at').write(log)
 
         #Preconfig section
         configs=configparser.ConfigParser()
-        configs.read('settings.ini')
+        configs.read(os.path.dirname(__file__)+'/'+'settings.ini')
         tag=configs['ENCRYPT']['TAG']
         if mode == 256 or mode == 128 or mode == 64:
             start_time=time()                       #Start time
@@ -29,14 +31,14 @@ def AES(msg, method, msg_type, mode):
             content=open(msg, 'rb').read()          #Open and read the file in binary mode
         elif msg_type == "text":
             name=MD5_sample.encrypt(rng(32))
-            path=os.getcwd()+'/tmp'
+            path=os.path.dirname(__file__)+'/tmp'
             extension=configs['ENCRYPT']['MES_TYPE']
             content=bytes(msg, 'utf-8')             #Change the message to binary
         else :  return 2                            #Fail reason, invalid message type or none one
 
         #Encrypt section
         print("encrypting...")
-        encrypt=AES256.encrypt(key,content)                                                         #Keep the encrypted data
+        encrypt=AES256.encrypt(key,content)                                                                   #Keep the encrypted data
         open(path+'/'+MD5_sample.encrypt(bytes(log, 'utf-8'))+extension, '+wb').write(name)                   #Overwrite the file with the encrypted data
         open(path+'/'+MD5_sample.encrypt(bytes(log, 'utf-8'))+extension, 'ab').write(tag)
         open(path+'/'+MD5_sample.encrypt(bytes(log, 'utf-8'))+extension, 'ab').write(encrypt)
@@ -47,16 +49,30 @@ def AES(msg, method, msg_type, mode):
         log="\n ending AES %d encrypt at %s" % (mode, log_end_time)
         os.remove(msg)
         print("exporting key...")
-        open(os.getcwd()+'/tmp/'+MD5_sample.encrypt(log, 'utf-8')+'.key', '+wb').write(key)
-
+        open(os.path.dirname(__file__)+'/tmp/'+MD5_sample.encrypt(log, 'utf-8')+'.key', '+wb').write(key)
         #End section
-        open(os.getcwd()+'//'+'encrypt_system.log', 'at').write(log)
+        open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'at').write(log)
         return 0
 
         #CAMBIA EL NOMBRE DEL ARCHIVO CON UN HASH DEL MISMO, BUSCA COMO GUARDAR DICHO NOMBRE Y USA COMO PUNTO ORIGEN EL TIEMPO DE INICIO Y EL TAMANO EN EL LOG
 
     elif method== "decrypt":
-        print(1)
+        configs=configparser.ConfigParser()
+        configs.read(os.path.dirname(__file__)+'/'+'settings.ini')    
+        if msg_type == '':
+            if re.search(configs['ENCRYPT']['FILE_TYPE'], msg):
+                msg_type='file'
+            if re.search(configs['ENCRYPT']['MES_TYPE'], msg):
+                msg_type='text'
+        if msg_type == 'file':
+            a=1
+        if msg_type == 'text':
+            b=1
+        
+
+
+
+
 if __name__ == '__main__':
     #FILE MANAGEMENT
     path=os.getcwd()
