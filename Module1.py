@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import CENTER, ttk
 import tkinter.font as tkFont
 import pandas as pd
-
+import os
 #VENTANA
 class Database():
     def __init__(self, database):
@@ -20,7 +20,7 @@ class Database():
         style.theme_use("vista")
         style.configure("Treeview", background="black", fieldbackground="black", foreground="white")
         #TABLA DE HASH
-        algoritmos_hash=pd.DataFrame(pd.read_csv('sistemas_hash.csv'))
+        algoritmos_hash=pd.DataFrame(pd.read_csv(os.path.dirname(__file__)+'/'+'sistemas_hash.csv'))
         hash_columns=algoritmos_hash.columns.values
         hash_tree=ttk.Treeview(database, columns=list(hash_columns))
         rowLabels = algoritmos_hash.index.tolist()
@@ -33,7 +33,7 @@ class Database():
             hash_tree.insert('', i, text=rowLabels[i], values=algoritmos_hash.iloc[i,:].tolist())
         hash_tree['displaycolumns']=list(hash_columns)
         #TABLA DE LLAVES
-        algoritmos_llaves=pd.DataFrame(pd.read_csv('sistemas_llaves.csv'))
+        algoritmos_llaves=pd.DataFrame(pd.read_csv(os.path.dirname(__file__)+'/'+'sistemas_llaves.csv'))
         llaves_columns=algoritmos_llaves.columns.values
         llaves_tree=ttk.Treeview(database, columns=list(llaves_columns))
         rowLabels = algoritmos_llaves.index.tolist()
@@ -47,17 +47,12 @@ class Database():
         llaves_tree['displaycolumns']=list(llaves_columns)
         #Module Radio buttons
         GRadio_524=tk.Button(database)
-#        GRadio_524["font"] = tkFont.Font(family='Times',size=10)
-#        GRadio_524["fg"] = "#333333"
-#        GRadio_524["justify"] = "center"
         GRadio_524["text"] = "Alg. de llaves"
         GRadio_524.place(x=20,y=70,width=85,height=25)
         GRadio_524["command"] = lambda : self.llaves_button(llaves_tree, hash_tree)
 
         GRadio_685=tk.Button(database)
-#        GRadio_685["font"] = tkFont.Font(family='Times',size=10)
-#        GRadio_685["fg"] = "#333333"
-#        GRadio_685["justify"] = "center"
+
         GRadio_685["text"] = "Alg. de hash"
         GRadio_685.place(x=135,y=70,width=85,height=25)
         GRadio_685["command"] = lambda : self.hash_button(hash_tree, llaves_tree)
