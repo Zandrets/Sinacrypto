@@ -43,9 +43,9 @@ class menu():
         graphics_button["fg"] = "#000000"                           #Button font color
         graphics_button["bg"] = "#a21313"                           #Button color
         graphics_button["justify"] = "center"                       #Button align
-        graphics_button["text"] = "Database"                        #Button text
-        graphics_button.place(x=340,y=20,width=135,height=40)        #Button position and size
-        graphics_button["command"] = self.graphics_button_command    #Button actions call
+        graphics_button["text"] = "Graphics"                        #Button text
+        graphics_button.place(x=340,y=20,width=135,height=40)       #Button position and size
+        graphics_button["command"] = self.graphics_button_command   #Button actions call
         
     def database_button_command(self):                          #Button actions list
         database=tk.Tk()
