@@ -35,3 +35,5 @@ import pandas as pd
 import os
 llaves=pd.DataFrame(pd.read_csv(os.path.dirname(os.path.dirname(__file__))+'/'+'sistemas_llaves.csv'))
 print(llaves)
+for i in range(1, 3):
+    print(i)
