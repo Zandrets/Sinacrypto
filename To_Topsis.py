@@ -58,3 +58,5 @@ if __name__ == "__main__":
     hashs=pd.DataFrame(pd.read_csv("sistemas_hash.csv",index_col="Algoritmos"))
     keys=pd.DataFrame(pd.read_csv("sistemas_llaves.csv"))
     print(line.topsis_pipy(hashs, hashs, len(hashs.columns), [3,1,1], ["+","-","-"]))
+    
+        
