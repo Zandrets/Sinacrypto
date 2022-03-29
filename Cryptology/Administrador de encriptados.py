@@ -9,9 +9,14 @@ import AES_256_sample as AES256
 import MD5_sample
 
 #KEYS ALGORITHMS, you can add here your function
-def AES(msg, method, msg_type, mode):
-    if method == "encrypt":
+class AES_log_mode():
+    def __init__(self, method, *args):
+        if method == "encrypt":
+            self.encrypt(args[0], args[1], args[2])
+        if method == "decrypt":
+            self.decrypt(args[0], args[1])
         #Log section
+    def encrypt(self, msg, msg_type, mode):
         log_start_time=ctime(time())
         log="\n starting AES %d encrypt at %s" % (mode, log_start_time)
         open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'at').write(log)
@@ -54,24 +59,23 @@ def AES(msg, method, msg_type, mode):
         open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'at').write(log)
         return 0
 
-        #CAMBIA EL NOMBRE DEL ARCHIVO CON UN HASH DEL MISMO, BUSCA COMO GUARDAR DICHO NOMBRE Y USA COMO PUNTO ORIGEN EL TIEMPO DE INICIO Y EL TAMANO EN EL LOG
-
-    elif method== "decrypt":
+    def decrypt(self, msg, msg_type):
         configs=configparser.ConfigParser()
-        configs.read(os.path.dirname(__file__)+'/'+'settings.ini')    
+        tag=configs['ENCRYPT']['TAG']
+        configs.read(os.path.dirname(__file__)+'/'+'settings.ini')
+        raw_data=open(msg, 'rb').read()
         if msg_type == '':
             if re.search(configs['ENCRYPT']['FILE_TYPE'], msg):
                 msg_type='file'
             if re.search(configs['ENCRYPT']['MES_TYPE'], msg):
                 msg_type='text'
+        
+            for chars in range(0,len(list(tag))):
+                
         if msg_type == 'file':
             a=1
         if msg_type == 'text':
             b=1
-        
-
-
-
 
 if __name__ == '__main__':
     #FILE MANAGEMENT
