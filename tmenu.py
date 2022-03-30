@@ -63,8 +63,9 @@ class menu():
         llaves_table=pd.DataFrame(pd.read_csv(os.path.dirname(__file__)+'/'+"sistemas_llaves.csv", index_col='Algoritmos'))
         hashs=topsis.topsis_pipy(hash_table, hash_table, len(hash_table.columns), [3,1,1], ['+','-','-'])
         llaves=topsis.topsis_pipy(llaves_table, llaves_table ,len(llaves_table.columns), [3,1,1,1,1], ['+','-','-','-','-'])
+        print(llaves)        
         for i in range(0, hashs.shape[0]):
-            mpl.scatter(hashs.iloc[i, 1], hashs.iloc[i, 2])
+            mpl.scatter(hashs.iloc[i, len(hashs.columns)-1], hashs.iloc[i, len(hashs.columns)-2])
         mpl.show()
             
         

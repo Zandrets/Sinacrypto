@@ -62,6 +62,7 @@ for i in range(0, new_size):
         break
     name=name+chr(raw_content[i])
 open(name, '+wb').write(content)
+print(len(content))
 print(tools.file_reader('./','test_file.rar') )
 print(tools.file_reader('./',name))
-#print(name)
+print(ctime(os.path.getctime('nombre_de_prueba.rar')))

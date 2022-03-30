@@ -15,12 +15,8 @@ class AES_log_mode():
             self.encrypt(args[0], args[1], args[2])
         if method == "decrypt":
             self.decrypt(args[0], args[1], args[2])
-        #Log section
+            
     def encrypt(self, msg, msg_type, mode):
-        log_start_time=ctime(time())
-        log="\n starting AES %d encrypt at %s" % (mode, log_start_time)
-        open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'at').write(log)
-
         #Preconfig section
         configs=configparser.ConfigParser()
         configs.read(os.path.dirname(__file__)+'/'+'settings.ini')
@@ -30,6 +26,7 @@ class AES_log_mode():
             key=AES256.generate_key(mode/8)         #Generates an aleatory key
         else:   return 1                            #Fail reason invalid mode or none one
         if msg_type == "file":
+            size=tools.file_reader(os.path.dirname(msg)+'/', os.path.basename(msg))
             name=os.path.basename(msg)
             path=os.path.dirname(msg)
             extension=configs['ENCRYPT']['FILE_TYPE']
@@ -39,7 +36,13 @@ class AES_log_mode():
             path=os.path.dirname(__file__)+'/tmp'
             extension=configs['ENCRYPT']['MES_TYPE']
             content=bytes(msg, 'utf-8')             #Change the message to binary
+            size=len(content)
         else :  return 2                            #Fail reason, invalid message type or none one
+
+        #Log section
+        log_start_time=ctime(time())
+        log="\n starting AES %d encrypt of %d bytes at %s" % (mode, size, log_start_time)
+        open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'at').write(log)
 
         #Encrypt section
         print("encrypting...")
@@ -51,15 +54,15 @@ class AES_log_mode():
         #Export section
         log_end_time=ctime(time())
         if log_end_time == log_start_time: sleep(1); log_end_time=ctime(time())
-        log="\n ending AES %d encrypt at %s" % (mode, log_end_time)
-        os.remove(msg)
+        log="\n ending AES %d encrypt of %d bytes at %s" % (mode, size, log_end_time)
+        if msg_type == 'file': os.remove(msg)
         print("exporting key...")
-        open(os.path.dirname(__file__)+'/tmp/'+MD5_sample.encrypt(log, 'utf-8')+'.key', '+wb').write(key)
+        open(os.path.dirname(__file__)+'/tmp/'+MD5_sample.encrypt(bytes(log, 'utf-8'))+'.key', '+wb').write(key)
         #End section
         open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'at').write(log)
         return 0
 
-    def decrypt(self, msg, msg_type, raw_data):
+    def decrypt(self, msg, msg_type, raw_log):
         configs=configparser.ConfigParser()
         tag=bytes(configs['ENCRYPT']['TAG'], 'utf-8')
         configs.read(os.path.dirname(__file__)+'/'+'settings.ini')
@@ -86,14 +89,26 @@ class AES_log_mode():
                 print((i+len(tag)), new_size)
                 break
             name=name+chr(raw_content[i])
-        open(os.path.dirname(msg)+'/'+name, '+wb').write(content)
-        os.remove(msg)
-
-
+#        open(os.path.dirname(msg)+'/'+name, '+wb').write(content)
+        part=1
+        size=len(content)
+        for line in raw_log.readlines():
+            if part==1:
+                if re.search(ctime(os.path.getctime(msg)), line):
+                    if re.search('starting AES', line):
+                        if re.search(str(size), line):
+                            if MD5_sample.encrypt(bytes(line, 'utf-8')) == os.path.basename(msg):
+                                part=2
+            if part==2:
+                if re.search('ending AES', line):
+                    if re.search(str(size), line):
+                        key_file=MD5_sample.encrypt(bytes(line, 'utf-8'))
+        print(key_file)
         if msg_type == 'file':
             a=1
         if msg_type == 'text':
             b=1
+        os.remove(msg)
 
 if __name__ == '__main__':
     #FILE MANAGEMENT
