@@ -1,5 +1,5 @@
 #import Functions as tools
-from distutils.command.config import config
+import Functions as tools
 import os
 import re
 from time import time, ctime, sleep
@@ -14,7 +14,7 @@ class AES_log_mode():
         if method == "encrypt":
             self.encrypt(args[0], args[1], args[2])
         if method == "decrypt":
-            self.decrypt(args[0], args[1])
+            self.decrypt(args[0], args[1], args[2])
         #Log section
     def encrypt(self, msg, msg_type, mode):
         log_start_time=ctime(time())
@@ -24,7 +24,7 @@ class AES_log_mode():
         #Preconfig section
         configs=configparser.ConfigParser()
         configs.read(os.path.dirname(__file__)+'/'+'settings.ini')
-        tag=configs['ENCRYPT']['TAG']
+        tag=bytes(configs['ENCRYPT']['TAG'], 'utf8')
         if mode == 256 or mode == 128 or mode == 64:
             start_time=time()                       #Start time
             key=AES256.generate_key(mode/8)         #Generates an aleatory key
@@ -59,9 +59,9 @@ class AES_log_mode():
         open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'at').write(log)
         return 0
 
-    def decrypt(self, msg, msg_type):
+    def decrypt(self, msg, msg_type, raw_data):
         configs=configparser.ConfigParser()
-        tag=configs['ENCRYPT']['TAG']
+        tag=bytes(configs['ENCRYPT']['TAG'], 'utf-8')
         configs.read(os.path.dirname(__file__)+'/'+'settings.ini')
         raw_data=open(msg, 'rb').read()
         if msg_type == '':
@@ -69,9 +69,27 @@ class AES_log_mode():
                 msg_type='file'
             if re.search(configs['ENCRYPT']['MES_TYPE'], msg):
                 msg_type='text'
-        
-            for chars in range(0,len(list(tag))):
-                
+        open('tmp_file.rar', '+wb').write(bytes('nombre_de_prueba.rar', 'utf-8')+tag+open('test_file.rar', 'rb').read())
+        raw_content=open(msg, 'rb').read()
+        new_size=tools.file_reader('./','tmp_file.rar')
+        name=''
+        for i in range(0, new_size):
+            s_tag=''
+            if chr(raw_content[i]) == chr(tag[0]):
+                for j in range(0, len(tag)):
+                    s_tag=s_tag+chr(raw_content[i+j])
+            if s_tag==tag.decode('utf-8'):
+                content=b''
+                print(chr(raw_content[i+len(tag)]))
+                for k in range((i+len(tag)), new_size):
+                    content=content+bytes([raw_content[k]])
+                print((i+len(tag)), new_size)
+                break
+            name=name+chr(raw_content[i])
+        open(os.path.dirname(msg)+'/'+name, '+wb').write(content)
+        os.remove(msg)
+
+
         if msg_type == 'file':
             a=1
         if msg_type == 'text':
