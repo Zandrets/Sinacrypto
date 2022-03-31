@@ -6,7 +6,7 @@ from time import time, ctime
 import random
 import MD5_sample
 import re
-import AES_256_sample as AES
+import legacy.AES_256_sample as AES
 # mode=256
 # print(os.path.dirname(os.path.abspath('ECC_sample.py')))
 # #print(open('c:\\users\\MC17060010.WMX/Downloads\\Sinacrypto-main\\Cryptology/texto de leer.txt', 'rt').read())
@@ -25,11 +25,16 @@ tag=bytes(configs['ENCRYPT']['TAG'], 'utf-8')
 # #print(ctime(os.path.getctime('asdf.tmp')))
 # axy='abcde'
 # key=AES.generate_key(256/8)
-# # text=open(os.path.dirname(__file__)+'/'+'test_file.rar', 'rb').read()
+# text=open(os.path.dirname(__file__)+'/'+'test_file.rar', 'rb').read()
+# size=tools.file_reader('./','test_file.rar')
 # encrypt=AES.encrypt(key, text)
 # decrypt=AES.decrypt(key, encrypt)
-# open(os.path.dirname(__file__)+'/'+'result.rar', '+wb').write(decrypt)
-# exit()
+# open(os.path.dirname(__file__)+'/'+'result.rar', '+wb').write(encrypt)
+# new_size=tools.file_reader('./','result.rar')
+# print('change of sizes', size, new_size)
+# print(text)
+# print(encrypt)
+#exit()
 # print(type(configs['ENCRYPT']['FILE_TYPE']))
 # if re.search('axc', axy):
 #     print('encontrado')
@@ -43,26 +48,46 @@ tag=bytes(configs['ENCRYPT']['TAG'], 'utf-8')
 #        print(args[0])
 #TEST('a', 'b', 'c')
 
-open('tmp_file.rar', '+wb').write(bytes('nombre_de_prueba.rar', 'utf-8')+tag+open('test_file.rar', 'rb').read())
-raw_content=open('tmp_file.rar', 'rb').read()
-size=tools.file_reader('./','test_file.rar')
-new_size=tools.file_reader('./','tmp_file.rar')
-name=''
-for i in range(0, new_size):
-    s_tag=''
-    if chr(raw_content[i]) == chr(tag[0]):
-        for j in range(0, len(tag)):
-            s_tag=s_tag+chr(raw_content[i+j])
-    if s_tag==tag.decode('utf-8'):
-        content=b''
-        print(chr(raw_content[i+len(tag)]))
-        for k in range((i+len(tag)), new_size):
-            content=content+bytes([raw_content[k]])
-        print((i+len(tag)), size)
-        break
-    name=name+chr(raw_content[i])
-open(name, '+wb').write(content)
-print(len(content))
-print(tools.file_reader('./','test_file.rar') )
-print(tools.file_reader('./',name))
-print(ctime(os.path.getctime('nombre_de_prueba.rar')))
+# open('tmp_file.rar', '+wb').write(bytes('nombre_de_prueba.rar', 'utf-8')+tag+open('test_file.rar', 'rb').read())
+# raw_content=open('tmp_file.rar', 'rb').read()
+# size=tools.file_reader('./','test_file.rar')
+# new_size=tools.file_reader('./','tmp_file.rar')
+# name=''
+# for i in range(0, new_size):
+#     s_tag=''
+#     if chr(raw_content[i]) == chr(tag[0]):
+#         for j in range(0, len(tag)):
+#             s_tag=s_tag+chr(raw_content[i+j])
+#     if s_tag==tag.decode('utf-8'):
+#         content=b''
+#         print(chr(raw_content[i+len(tag)]))
+#         for k in range((i+len(tag)), new_size):
+#             content=content+bytes([raw_content[k]])
+#         print((i+len(tag)), size)
+#         break
+#     name=name+chr(raw_content[i])
+# open(name, '+wb').write(content)
+# print(len(content))
+# print(tools.file_reader('./','test_file.rar') )
+# print(tools.file_reader('./',name))
+# print(ctime(os.path.getctime('nombre_de_prueba.rar')))
+# print(open('RSA_key_sample.key','rt').read())
+dia = 4
+
+with tools.switch(dia) as s:
+	if s.case(1, True):
+		print('lunes')
+	if s.case(2, True):
+		print('martes')
+	if s.case(3, True):
+		print('miércoles')
+	if s.case(4, True):
+		print('jueves')
+	if s.case(5, True):
+		print('viernes')
+	if s.case(6, True):
+		print('sábado')
+	if s.case(7, True):
+		print('domingo')
+	if s.default():
+		print('error')
