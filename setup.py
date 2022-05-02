@@ -97,8 +97,8 @@ setup(
     long_description=read("README.rst"),
     author='Ramses Ramirez',
     author_email='romanominers@gmail.com',
-    url='https://aprendeit.com',
-    download_url='https://URL_PAQUETE/ejemplo_paquete/-/archive/master/ejemplo_paquete-master.tar'.format(
+    url='-',
+    download_url='https://github.com/zandrets/Sinacrypto'.format(
         VERSION),
     keywords=['Sinacrypto','cryptology','Sina'],
     install_requires=[
@@ -108,6 +108,7 @@ setup(
         'random',
         'time',
         'eciespy',
+        'hashlib',
     ],
     setup_requires=['requests'],
     tests_require=[
@@ -117,7 +118,7 @@ setup(
         'pytest-dependency',
     ],
     entry_points={
-        'console_scripts': ['ejemplo_paquete=ejemplo_paquete.ejemplo_paquete_mod:main'],
+        'console_scripts': ['Sinacrypto=Sinacrypto.Cryptouse'],
     },
     classifiers=[
         'Development Status :: 4 - Beta',
