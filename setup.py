@@ -91,7 +91,7 @@ def read(file_name=None, is_encoding=True, ignore_raises=False):
 setup(
     name='Sinacrypto',
     version=VERSION,
-    license=read("LICENSE", is_encoding=False, ignore_raises=True),
+#    license=read("LICENSE", is_encoding=False, ignore_raises=True),
     packages=find_packages(),
     description='Sinacrypto test repository',
     long_description=read("README.rst"),
@@ -102,13 +102,8 @@ setup(
         VERSION),
     keywords=['Sinacrypto','cryptology','Sina'],
     install_requires=[
-        'os',
-        're',
         'pycryptodome',
-        'random',
-        'time',
         'eciespy',
-        'hashlib',
     ],
     setup_requires=['requests'],
     tests_require=[
@@ -117,9 +112,9 @@ setup(
         'pytest-html',
         'pytest-dependency',
     ],
-    entry_points={
-        'console_scripts': ['Sinacrypto=Sinacrypto.Cryptouse'],
-    },
+#    entry_points={
+#        'console_scripts': ['Sinacrypto=Sinacrypto.Cryptouse'],
+#    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

@@ -1,0 +1,24 @@
+Metadata-Version: 2.1
+Name: Sinacrypto
+Version: 0.4.0
+Summary: Sinacrypto test repository
+Home-page: -
+Author: Ramses Ramirez
+Author-email: romanominers@gmail.com
+License: UNKNOWN
+Download-URL: https://github.com/zandrets/Sinacrypto
+Keywords: Sinacrypto,cryptology,Sina
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+
+UNKNOWN
+
