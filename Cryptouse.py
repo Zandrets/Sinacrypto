@@ -181,17 +181,3 @@ def AES_log_mode_decrypt(msg, msg_type, raw_log):
     os.remove(os.path.dirname(__file__)+'/tmp/'+key_file)
     os.remove(msg)
     return 0
-
-if __name__ == '__main__':
-    a=1
-    #USAGE FOR RSA_sc
-#    print(PKCS1_OAEP_encrypt('text to be encrypted', 'text',2048))
-#    print(RSA_AL_key_alg(2048, 'test_priv_keys', 'test_pub_keys', 0))
-    print(RSA_AL_key_alg(2048, os.path.dirname(__file__)+'/keys/'+'d14aeb64b8de8cabff3355f70397358e.pem.priv', 'test_pub_another_keys', 1))
-    #USAGE FOR AES_log_mode
-    #THE FILE MODE MUST NEED TO HAVE A PATH
-    file="test_file.rar"
-#    print(AES_log_mode_encrypt(file,'file',256))                             #for files
-#    print(AES_log_mode_encrypt('text to be encrypted','text',256))    #for text
-#    print(AES_log_mode_decrypt(os.path.dirname(__file__)+'/tmp/'+'9ec24850ad095c70252e8251c15994bb.pqr', '', open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'rt')))
-#    print(AES_log_mode_decrypt(os.path.dirname(__file__)+'/'+'b7395f08d34d1e43e7b188cfdd9aeba8.nmo', '',open(os.path.dirname(__file__)+'/'+'encrypt_system.log', 'rt')))
