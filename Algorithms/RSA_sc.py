@@ -1,6 +1,5 @@
 import os
 from Crypto.Signature import pkcs1_15
-from coincurve import PrivateKey
 from Sinacrypto.Hash import *
 import configparser
 from Crypto.PublicKey import RSA
