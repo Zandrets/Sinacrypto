@@ -6,8 +6,8 @@ from random import randbytes as rng, randint as dice
 from Sinacrypto.Algorithms import AES_sc
 from Sinacrypto.Algorithms import RSA_sc
 #from Sinacrypto.Algorithms import ECC_sc as ECC
-from Sinacrypto.Hash import *
-from Sinacrypto.Tools import *
+from Sinacrypto.Hash.Hash_sc import *
+from Sinacrypto.Tools.Functions import *
 from Sinacrypto.Settings.global_settings import *
 from Crypto.Cipher import PKCS1_OAEP
 
