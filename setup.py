@@ -93,6 +93,8 @@ setup(
     version=VERSION,
 #    license=read("LICENSE", is_encoding=False, ignore_raises=True),
     packages=find_packages(),
+    package_data={'': ['settings.ini']},
+    include_package_data=True,
     description='Sinacrypto test repository',
     long_description=read("README.rst"),
     author='Ramses Ramirez',
