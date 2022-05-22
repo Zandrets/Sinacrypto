@@ -7,8 +7,8 @@ from Sinacrypto.Algorithms import AES_sc
 from Sinacrypto.Algorithms import RSA_sc
 #from Sinacrypto.Algorithms import ECC_sc as ECC
 from Sinacrypto.Hash.Hash_sc import *
-from Sinacrypto.Tools.Functions import *
-from Sinacrypto.Settings.global_settings import *
+from Sinacrypto.Tools import *
+from Sinacrypto.Settings import *
 from Crypto.Cipher import PKCS1_OAEP
 
 def RSA_AL_key_alg(bits, priv_name, pub_name, only_pub):
@@ -138,7 +138,7 @@ def AES_log_mode_encrypt(msg, msg_type, mode):
     open(logsett.path+'/'+logsett.name, 'at').write(log)
 
     #Encrypt section
-    for line in open(logsett.path+logsett.name, 'rt').readlines():
+    for line in open(logsett.path+'/'+logsett.name, 'rt').readlines():
         if re.search(log, line):
             log=line
             break
@@ -163,18 +163,17 @@ def AES_log_mode_decrypt(msg, msg_type, raw_log):
     configs=configparser.ConfigParser()
     configs.read(os.path.dirname(__file__)+'/settings/'+'settings.ini')
     tag=bytes(configs['AES_log_mode']['TAG'], 'utf-8')
-    name=os.path.basename(msg)
+    old_name=os.path.basename(msg)
+    if os.path.dirname(msg) == '': path=filesett.path
+    else: path=os.path.dirname(msg)
     if msg_type == '':
         if re.search(configs['AES_log_mode']['FILE_TYPE'], msg):
             msg_type='file'
-            if os.path.dirname(msg) == '': path=filesett.path
-            else: path=os.path.dirname(msg)
         if re.search(configs['AES_log_mode']['MES_TYPE'], msg):
             msg_type='text'
-            if os.path.dirname(msg) == '': path=filesett.path
-            else: path=os.path.dirname(msg)
-    raw_content=open(path+'/'+name, 'rb').read()
-    new_size=file_size(path+'/',name)
+    print(path)
+    raw_content=open(path+'/'+old_name, 'rb').read()
+    new_size=file_size(path+'/',old_name)
     name=''
     for i in range(0, new_size):
         s_tag=''
@@ -192,20 +191,20 @@ def AES_log_mode_decrypt(msg, msg_type, raw_log):
     key_file=''
     for line in raw_log.readlines():
         if part==1:
-            if re.search(ctime(os.path.getctime(msg)), line):
+            if re.search(ctime(os.path.getctime(path+"/"+old_name)), line):
                 if re.search('starting AES', line):
                     if re.search(str(size-8), line) or re.search(str(size-16), line) or re.search(str(size-32), line):
-                        if MD5_sc(bytes(line, 'utf-8'))+configs['AES_log_mode']['MES_TYPE'] == os.path.basename(msg) or MD5_sc(bytes(line, 'utf-8'))+configs['AES']['FILE_TYPE'] == os.path.basename(msg):
+                        if MD5_sc(bytes(line, 'utf-8'))+configs['AES_log_mode']['MES_TYPE'] == old_name or MD5_sc(bytes(line, 'utf-8'))+configs['AES']['FILE_TYPE'] == old_name:
                             part=2
         if part==2:
             if re.search('ending AES', line):
                 if re.search(str(size-8), line) or re.search(str(size-16), line) or re.search(str(size-32), line):
                     key_file=MD5_sc(bytes(line, 'utf-8'))+'.key'
-    if key_file=='': return 3
+    if key_file=='': return 2
     if msg_type == 'file':
         open(path+'/'+name, '+wb').write(AES_sc.decrypt(open(keysett.path+'/'+key_file, 'rb').read(),content))
     if msg_type == 'text':
         print(str(AES_sc.decrypt(open(keysett.path+'/'+key_file, 'rb').read(),content), 'utf-8'))
     os.remove(keysett.path+'/'+key_file)
-    os.remove(msg)
+    os.remove(path+"/"+old_name)
     return 0
