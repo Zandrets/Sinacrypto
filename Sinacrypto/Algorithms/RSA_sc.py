@@ -1,11 +1,13 @@
-import os
 from Crypto.Signature import pkcs1_15
-from Sinacrypto.Hash import *
-import configparser
 from Crypto.PublicKey import RSA
-from random import randint
+from Sinacrypto.Hash import *
 from Sinacrypto.Tools import switch
+from Sinacrypto.Settings import *
+
+import os
 import re
+import configparser
+from random import randint
 
 def generate_priv_key(bits, mode, *args):
     if bits > 1023 and (bits % 256) == 0:
@@ -15,12 +17,12 @@ def generate_priv_key(bits, mode, *args):
         if mode == 'file':
             if len(args) == 0: return 255
             name=MD5_sc(bytes(os.path.basename(args[0]), 'utf-8'))
-            if os.path.dirname(args[0])=='': path=os.path.dirname(os.path.dirname(__file__))+'/keys/'
-            else : path=os.path.basename(args[0])+'/'
+            if os.path.dirname(args[0])=='': path=keysett.path+"/"
+            else : path=os.path.dirname(args[0])+'/'
             configs=configparser.ConfigParser()
-            configs.read(os.path.dirname(os.path.dirname(__file__))+'/settings/'+'settings.ini')
-            if len(args) > 2 and args[1]=='DER': tag=configs['RSA']['BIN_TYPE']
-            else: tag=configs['RSA']['TEXT_TYPE']
+            configs.read(os.path.dirname(os.path.dirname(__file__))+'/Settings/'+'settings.ini')
+            if len(args) > 2 and args[1]=='DER': tag=configs['RSA_sc']['BIN_TYPE']
+            else: tag=configs['RSA_sc']['TEXT_TYPE']
             with switch(len(args)) as s:
                 if s.case(1): open(path+name+tag,'+wb').write(key.export_key('PEM'));return path+name+tag
                 if s.case(2): open(path+name+tag,'+wb').write(key.export_key(format=args[1]));return path+name+tag
@@ -33,8 +35,9 @@ def generate_priv_key(bits, mode, *args):
 
 def import_key(file, struct, password):
     name=os.path.basename(file)
-    if os.path.dirname(file)=='': path=os.path.dirname(os.path.dirname(__file__))+'/keys/'
+    if os.path.dirname(file)=='': path=keysett.path
     else : path=os.path.dirname(file)+'/'
+    print(path+'/'+name)
     if struct=='text':
         if password=='':password=None
         return RSA.import_key(open(path+'/'+name, 'rt').read(), passphrase=password)
@@ -44,10 +47,10 @@ def import_key(file, struct, password):
     else:
         if password=='':password=None
         configs=configparser.ConfigParser()
-        configs.read(os.path.dirname(os.path.dirname(__file__))+'/settings/'+'settings.ini')
-        if re.search(configs['RSA']['TEXT_TYPE'], name):
+        configs.read(os.path.dirname(os.path.dirname(__file__))+'/Settings/'+'settings.ini')
+        if re.search(configs['RSA_sc']['TEXT_TYPE'], name):
             return RSA.import_key(open(path+'/'+name, 'rt').read(), passphrase=password)
-        elif re.search(configs['RSA']['BIN_TYPE'], name):
+        elif re.search(configs['RSA_sc']['BIN_TYPE'], name):
             return RSA.import_key(open(path+'/'+name, 'rb').read(), passphrase=password)
         else: return 255
 
@@ -55,12 +58,12 @@ def generate_pub_key(priv_key, mode, *args):
     if mode=='file':
         if len(args) == 0: return 255
         name=MD5_sc(bytes(os.path.basename(args[0]), 'utf-8'))
-        if os.path.dirname(args[0])=='': path=os.path.dirname(os.path.dirname(__file__))+'/tmp/'
-        else : path=os.path.basename(args[0])+'/'
+        if os.path.dirname(args[0])=='': path=filesett.path+'/'
+        else : path=os.path.dirname(args[0])+'/'
         configs=configparser.ConfigParser()
-        configs.read(os.path.dirname(os.path.dirname(__file__))+'/settings/'+'settings.ini')
-        if len(args) > 2 and args[1]=='DER': tag=configs['RSA']['BIN_TYPE']
-        else: tag=configs['RSA']['TEXT_TYPE']
+        configs.read(os.path.dirname(os.path.dirname(__file__))+'/Settings/'+'settings.ini')
+        if len(args) > 2 and args[1]=='DER': tag=configs['RSA_sc']['BIN_TYPE']
+        else: tag=configs['RSA_sc']['TEXT_TYPE']
         with switch(len(args)) as s:
             if s.case(1): open(path+name+tag,'+wb').write(priv_key.publickey().export_key('PEM'));return path+name+tag
             if s.case(2): open(path+name+tag,'+wb').write(priv_key.publickey().export_key(format=args[1]));return path+name+tag
